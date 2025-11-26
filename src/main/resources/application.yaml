@@ -1,0 +1,29 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: retry-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+resilience4j:
+  retry:
+    instances:
+      kafkaRetry:
+        maxAttempts: 10
+        waitDuration: 5000ms
+        retryExceptions:
+          - java.lang.RuntimeException
+        enableExponentialBackoff: false
+
+logging:
+  level:
+    root: INFO
+    com.example.retrykafka: DEBUG
+
+server:
+  port: 8081
